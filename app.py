@@ -926,9 +926,9 @@ def update_project(whichActivities):
     dfuse = df2.loc[df2['Activity Name'].isin(whichActivities), :]
     dfuse.loc[:, 'Latitude'] = dfuse.apply(lambda x: float(x.Latitude), axis=1)
     dfuse.loc[:, 'Longitude'] = dfuse.apply(lambda x: float(x.Longitude), axis=1)
-    dfuse.loc[:, 'what'] = dfuse.apply(lambda x: float(1), axis=1)
-    fig = px.scatter_mapbox(dfuse, lat="Latitude", lon="Longitude", color="Activity Name", size='what',
-                            color_discrete_map=cdm, size_max=15, zoom=15,title = 'Location/Activity')
+    dfuse.loc[:, 'size'] = dfuse.apply(lambda x: float(.5), axis=1)
+    fig = px.scatter_mapbox(dfuse, lat="Latitude", lon="Longitude", color="Activity Name", size='size',
+                            color_discrete_map=cdm, size_max=7, zoom=15,title = 'Location/Activity')
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)')
             #plot_bgcolor='rgba(0,0,0,0)')
     return fig
