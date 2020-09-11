@@ -260,6 +260,8 @@ def generate_control_card():
             html.Br(),
             html.P("Summary Info"),
             html.Br(),
+            #html.Div(id = 'distanceTravelled'),
+            #html.Div(id = 'timeTravelled'),
             dash_table.DataTable(data=dataf_short.to_dict('records'),
                 columns=[{'id': c, 'name': c} for c in dataf_short.columns],
                 style_cell={'fontSize':12, 'font-family':'sans-serif'})
@@ -927,9 +929,17 @@ def update_project(whichActivities):
     dfuse.loc[:, 'Latitude'] = dfuse.apply(lambda x: float(x.Latitude), axis=1)
     dfuse.loc[:, 'Longitude'] = dfuse.apply(lambda x: float(x.Longitude), axis=1)
     dfuse.loc[:, 'size'] = dfuse.apply(lambda x: float(.5), axis=1)
-    fig = px.scatter_mapbox(dfuse, lat="Latitude", lon="Longitude", color="Activity Name", size='size',
-                            color_discrete_map=cdm, size_max=7, zoom=15,title = 'Location/Activity')
+    fig = px.scatter_mapbox(dfuse, lat="Latitude", lon="Longitude", color="Activity Name", size_max=7,
+                            color_discrete_map=cdm, zoom=15.5,title = 'Location/Activity',hover_data=["Activity Name",'Latitude'],
+                            )
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)')
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="top",
+        #y=1.02,
+        xanchor="right",
+        x=1
+    ))
             #plot_bgcolor='rgba(0,0,0,0)')
     return fig
     
@@ -946,7 +956,31 @@ def update_pie(whichActivites):
                     color_discrete_map=cdm, title="Activity Time",hole=.3
                     )
     piefig.update_layout(paper_bgcolor='rgba(0,0,0,0)')
+    piefig.update_layout(legend_title_text='Activity Name')
+
     return piefig
+
+
+@app.callback(dash.dependencies.Output('distanceTravelled', 'children'),
+              [dash.dependencies.Input('user-select', 'value')]
+              )
+def update_text4(user):
+    shortened = df2.loc[df.User == user,:]
+    dmet = round(shortened.odometer.max() * (6.2/10000),2)
+    return "User Distance Travelled: " + str(dmet) + ' miles'
+
+
+@app.callback(dash.dependencies.Output('timeTravelled', 'children'),
+              [dash.dependencies.Input('user-select', 'value')]
+              )
+def update_text2(user):
+    shortened = df2.loc[df2.User == user,:]
+    tdif = shortened.DateTime.max() - shortened.DateTime.min()
+    seconds = tdif.seconds
+    hours = seconds // 3600
+    minutes = (seconds // 60) % 60
+    sec = seconds - hours*3600 - minutes*60
+    return "User Work Time: " + str(hours) + ":" + str(minutes) + ":" + str(sec)
 
 
 
