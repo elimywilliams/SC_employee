@@ -50,7 +50,7 @@ df = pd.read_csv(DATA_PATH.joinpath("clinical_analytics.csv"))
 #df2 = pd.read_csv(DATA_PATH.joinpath("PROTARU-BC-20200901.csv"))
 #df2 = pd.read_excel('r'+str(DATA_PATH.joinpath("PROTARU-BC-20200901.xlsx")) )
 #df2 = pd.read_excel(r'/Users/emilywilliams/Documents/GitHub/breadcrumb/PROTARU-BC-20200901.xlsx')
-df2 = pd.read_csv('/Users/emilywilliams/PycharmProjects/breadcrumb_proj/PROTARU-BC-20200901.csv')
+df2 =pd.read_csv('https://raw.githubusercontent.com/elimywilliams/SC_employee/master/data/PROTARU-BC-20200901.csv')
 
 def haversine(lat1, lon1, lat2, lon2, radius=6371):
     """ calculate the distance between two gps coordinates, using haversine function
