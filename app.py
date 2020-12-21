@@ -709,7 +709,7 @@ app.layout = html.Div(
         html.Div(
             id="left-column",
             className="four columns",
-            children=[description_card(), generate_control_card()
+            children=[description_card(), generate_control_card()#,html.Div(id = 'timeTravelled')
            ,
 
 ]
@@ -932,6 +932,8 @@ def update_project(whichActivities):
     fig = px.scatter_mapbox(dfuse, lat="Latitude", lon="Longitude", color="Activity Name", size_max=7,
                             color_discrete_map=cdm, zoom=15.5,title = 'Location/Activity',hover_data=["Activity Name",'Latitude'],
                             )
+    #fig = px.line_mapbox(dfuse, lat="Latitude", lon="Longitude", color="Activity Name", zoom=15.5,color_discrete_map=cdm,
+    #    title = 'Location/Activity')
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)')
     fig.update_layout(legend=dict(
         orientation="h",
@@ -943,6 +945,8 @@ def update_project(whichActivities):
             #plot_bgcolor='rgba(0,0,0,0)')
     return fig
     
+    
+
 
 @app.callback(dash.dependencies.Output('work_pie', 'figure'),
               [dash.dependencies.Input('activity_select', 'value')]
@@ -973,14 +977,43 @@ def update_text4(user):
 @app.callback(dash.dependencies.Output('timeTravelled', 'children'),
               [dash.dependencies.Input('user-select', 'value')]
               )
-def update_text2(user):
+              
+def generate_user_card(user):
+    """
+
+    :return: A Div containing controls for graphs.
+    """
     shortened = df2.loc[df2.User == user,:]
     tdif = shortened.DateTime.max() - shortened.DateTime.min()
     seconds = tdif.seconds
     hours = seconds // 3600
     minutes = (seconds // 60) % 60
     sec = seconds - hours*3600 - minutes*60
-    return "User Work Time: " + str(hours) + ":" + str(minutes) + ":" + str(sec)
+    texta = "User Work Time: " + str(hours) + ":" + str(minutes) + ":" + str(sec)
+
+    return html.Div(
+        id="control-card",
+        children=[
+            html.P("User Summary"),
+            html.Br(),
+            #html.Div(id = 'distanceTravelled'),
+            #html.Div(id = 'timeTravelled'),
+            html.Div(id = 'tt',children = [html.H1(texta)])
+        ],
+    )
+
+
+
+
+def update_text2(user2):
+    shortened = df2.loc[df2.User == user,:]
+    #tdif = shortened.DateTime.max() - shortened.DateTime.min()
+    #seconds = tdif.seconds
+    #hours = seconds // 3600
+    #minutes = (seconds // 60) % 60
+    #sec = seconds - hours*3600 - minutes*60
+    #return "User Work Time: " + str(hours) + ":" + str(minutes) + ":" + str(sec)
+    return "User Work Time!"
 
 
 
